@@ -23,9 +23,7 @@
         let loaded_file = await fetch(`img/AvatarImages.ora`).then(r => r.blob());
         await project.load(loaded_file);
 
-        updateElementStates(true);
-
-        renderAvatar();
+        generateAvatar();
     }
 
     // true == generating Avatar
@@ -46,16 +44,10 @@
 
         const rend = new jsora.Renderer(project);
 
-        // get config from project state
-        getAvatarConfiguration(project);
-
         var rendered = await rend.make_merged_image(); // returns canvas
         rendered.id = "avatar"
 
-        document.body.appendChild(rendered);
-
-        console.log(config);
-        
+        document.body.appendChild(rendered);        
         updateElementStates(false)
     }
 
@@ -111,25 +103,77 @@
  
         // extract avatar format from layers
         recurseOverChildren(project, "Root");
-
-        return config
     }    
 
-    function getRandomConfig() {
-        // TODO: we assume some layer properties here.
-        // we should encode whether part is nullable on layer name
+
+    async function randomizeHiddenParts()
+    {
+        await getAvatarConfiguration(project);
+
+        function traverse(jsonObj, parent) {
+            if( jsonObj !== null && typeof jsonObj == "object" ) {
+                Object.entries(jsonObj).forEach(([key, value]) => {
+                    // key is either an array index or object key
+                    var parentTrace = parent === "" ? key : parent + "/" + key
+                    traverse(value, parentTrace);
+                });
+            }
+            else {
+                randomizePart(parent + "//" + jsonObj)
+            }
+        }        
+        traverse(config, "");
     }
 
-    function generateAvatar() {
+    // TODO: We assume some layer properties and layer depth here.
+    // we should remove these assumptions and encode part properties on layer name (is it nullable, etc)
+    function randomizePart(partString)
+    {
+        var currentPart = partString.split("//")[1];
+        var path = "/" + partString.split("Root/")[1].split("//")[0];
+        var partType = path.split("/")[1];
+
+        // get node in open-raster project
+        var layer = project.get_by_path(path);
+
+        // accessories are optional
+        var isAccessory = partType === "Accessories";
+
+        // if accessory, last option means no accessory is chosen
+        var totalOptions =  isAccessory ? layer.children.length + 1: layer.children.length
+
+        // randomize a number
+        var randomPartIndex = Math.floor(Math.random() * totalOptions);
+
+        // hide all parts
+        for (child of layer.children) {
+            child.hidden = true;
+        }
+
+        // unhide one part (with accessory check)
+        if (randomPartIndex != layer.children.length)
+        {
+            layer.children[randomPartIndex].hidden = false;
+        }
+    }
+
+    async function getRandomConfig() {
+        
+        await randomizeHiddenParts();
+        console.log(config);
+
+    }
+
+    async function generateAvatar() {
 
         // generate new image from newConfig
         updateElementStates(true);
 
         // create a new random config
-        getRandomConfig();
+        await getRandomConfig();
 
 
-        renderAvatar();
+        setTimeout(renderAvatar, 50);
     }
 
     initialize();
