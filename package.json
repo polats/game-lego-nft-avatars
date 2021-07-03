@@ -1,0 +1,26 @@
+{
+  "name": "jsora",
+  "version": "0.3.0",
+  "description": "A frontend/browser javascript library for reading, writing, and rendering OpenRaster (ORA) files.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [
+    "ora",
+    "ORA",
+    "openraster"
+  ],
+  "author": "InkLab",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "jszip": "^3.2.2",
+    "gpu.js": "^2.6.9"
+  },
+  "main": "dist/jsora.min.js"
+}
