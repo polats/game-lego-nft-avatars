@@ -23,27 +23,54 @@
         let loaded_file = await fetch(`img/AvatarImages.ora`).then(r => r.blob());
         await project.load(loaded_file);
 
-        const rend = new jsora.Renderer(project);
-        var rendered = await rend.make_merged_image(); // returns canvas
+        updateElementStates(true);
 
-        document.body.appendChild(rendered);
+        renderAvatar();
+    }
 
-        document.getElementById('btnGenerateAvatar').innerHTML = "New Avatar";
-        document.getElementById('btnGenerateAvatar').disabled = false;
+    // true == generating Avatar
+    function updateElementStates(state)
+    {
+        if (state) {
+        // remove any previous avatar canvases
+            var oldCanvas = document.getElementById('avatar')
+            oldCanvas === null ? false: oldCanvas.remove() ;
 
-        var currentAvatarConfiguration = await getCurrentAvatarConfiguration(project);
+        }
 
-        console.log(currentAvatarConfiguration);
+        toggleButtonState(state)
 
     }
 
-    async function getCurrentAvatarConfiguration(project)
-    {
- 
-        // extract avatar format from layers
-        recurseOverChildren(project, "Root");
+    async function renderAvatar() {
 
-        return config
+        const rend = new jsora.Renderer(project);
+
+        // get config from project state
+        getAvatarConfiguration(project);
+
+        var rendered = await rend.make_merged_image(); // returns canvas
+        rendered.id = "avatar"
+
+        document.body.appendChild(rendered);
+
+        console.log(config);
+        
+        updateElementStates(false)
+    }
+
+    function toggleButtonState(state)
+    {
+        if (state)
+        {
+            document.getElementById('btnGenerateAvatar').innerHTML = "Generating Avatar...";
+            document.getElementById('btnGenerateAvatar').disabled = true;
+        }
+        else
+        {
+            document.getElementById('btnGenerateAvatar').innerHTML = "New Avatar";
+            document.getElementById('btnGenerateAvatar').disabled = false;
+        }
     }
 
     function addToConfig(partString) {
@@ -79,28 +106,30 @@
         }
     }    
 
+    async function getAvatarConfiguration(project)
+    {
+ 
+        // extract avatar format from layers
+        recurseOverChildren(project, "Root");
+
+        return config
+    }    
+
     function getRandomConfig() {
-        console.log("SD");
-    }
-
-
         // TODO: we assume some layer properties here.
         // we should encode whether part is nullable on layer name
+    }
 
-        function generateAvatar() {
-        var newConfig = getRandomConfig();
-
-
-
-        // create a new random config
-
-
-        // pull all config options
-        // randomize over configs
+    function generateAvatar() {
 
         // generate new image from newConfig
+        updateElementStates(true);
+
+        // create a new random config
+        getRandomConfig();
 
 
+        renderAvatar();
     }
 
     initialize();
