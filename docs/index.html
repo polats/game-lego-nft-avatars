@@ -154,6 +154,8 @@
 
         document.body.appendChild(rendered);
 
+        document.getElementById('btnGenerateAvatar').innerHTML = "New Avatar";
+        document.getElementById('btnGenerateAvatar').disabled = false;
 
         var currentAvatarConfiguration = await getCurrentAvatarConfiguration(project);
         console.log(currentAvatarConfiguration);
@@ -230,8 +232,18 @@
 
     examples();
 
+    function generateAvatar() {
+        alert("SD")
+    }
+
 </script>
 
 
 </body>
+<p>
+    <button id="btnGenerateAvatar" disabled type="button" onclick=generateAvatar()>
+        Generating Avatar...
+    </button>
+</p>
+
 </html>
