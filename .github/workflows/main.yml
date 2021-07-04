@@ -1,0 +1,56 @@
+name: CI
+on: push
+
+on:
+  # manual trigger
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  test-contracts:
+    runs-on: ubuntu-latest
+    env:
+       working-directory: ./contracts
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.18.0
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+        working-directory: ${{env.working-directory}}
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+        working-directory: ${{env.working-directory}}
+
+
+      - name: Installing dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ${{env.working-directory}}
+
+      - name: Linting
+        run: yarn lint
+        working-directory: ${{env.working-directory}}
+
+      - name: Formatting
+        run: yarn format
+        working-directory: ${{env.working-directory}}
+
+      - name: Running tests
+        run: yarn test
+        working-directory: ${{env.working-directory}}
