@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
     deployer: 0,
     simpleERC20Beneficiary: 1,
     simpleERC721Beneficiary: 1,
-    zeroAccount: '0x0000000000000000000000000000000000000000'
+    zeroAccount: '0x0000000000000000000000000000000000000000',
   },
   networks: {
     hardhat: {

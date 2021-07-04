@@ -19,7 +19,10 @@ const setup = deployments.createFixture(async () => {
     ...contracts,
     users,
     zeroAccount: await setupUser(zeroAccount, contracts),
-    simpleERC721Beneficiary: await setupUser(simpleERC721Beneficiary, contracts),
+    simpleERC721Beneficiary: await setupUser(
+      simpleERC721Beneficiary,
+      contracts
+    ),
   };
 });
 
@@ -27,12 +30,9 @@ describe('Simple ERC721', function () {
   it('mint succeeds', async function () {
     const {users, zeroAccount, SimpleERC721} = await setup();
 
-    await expect(
-      users[0].SimpleERC721.mint(1)
-    )
+    await expect(users[0].SimpleERC721.mint(1))
       .to.emit(SimpleERC721, 'Transfer')
       .withArgs(zeroAccount.address, users[0].address, 1);
-
   });
 
   it('transfer succeed', async function () {
