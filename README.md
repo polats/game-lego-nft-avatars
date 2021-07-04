@@ -1,8 +1,15 @@
 # Game Lego NFT Avatars
 
-Create generative avatars from separate PSD layers. Uses the open-raster format (.ora) exported from GIMP and the jsora library to easily create and render the avatar parts.
+### [👆 Demo Here](http://polats.com/game-lego-nft-avatars/)
+Create generative avatars from separate PSD layers. 
+
+Uses the Open Raster format (.ora) and the jsora library to easily create and render the avatar parts.
+
+Open Raster files can be generated from PSD by exporting from [GIMP](https://www.gimp.org/).
 
 ![Preview](img/avatargenerator.gif)
+
+## Sources
 
 jsora by [InkLabApp](https://twitter.com/inklabapp) : https://gitlab.com/inklabapp/jsora
 
