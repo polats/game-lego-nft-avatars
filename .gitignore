@@ -1,2 +1,39 @@
-*~
-node_modules
+# dependencies
+**/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+**/build
+**/dist
+
+# misc
+.env
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+packages/client/src/contracts
+packages/client/src/contracts.json
+packages/client/src/deployinfo.json
+packages/server/src/contracts.json
+packages/server/ipfs
+packages/server/orbitdb
+packages/server/report.*.json
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/
+
+/temp_metadata
+temp_metadata/README.md
+
+/artifacts
+/cache
+/typechain
+/deployments
